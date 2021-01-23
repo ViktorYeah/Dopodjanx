@@ -1,0 +1,77 @@
+version: '3.8'
+
+services:
+
+  postgres:
+    image: postgres
+    hostname: postgres
+    ports:
+      - "8102:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    env_file:
+      - config/db/postgres_env
+    networks:
+      - database1_network
+    restart: unless-stopped
+
+  pgadmin:
+    image: dpage/pgadmin4
+    depends_on:
+      - postgres
+    ports:
+      - "8103:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    networks:
+      - database1_network
+    restart: unless-stopped
+
+  # web container, with django + gunicorn
+  djangoapp:
+    build: ./backend
+    environment:
+      - DJANGO_SETTINGS_MODULE
+    volumes:
+      - ./backend:/backend
+      - static:/opt/services/djangoapp/static
+      - media:/opt/services/djangoapp/media
+    networks:
+      - database1_network
+      - nginx_network
+    depends_on:
+      - postgres
+
+  # reverse proxy container (nginx)
+  nginx_backend:
+    image: nginx:1.13
+    ports:
+      - 8105:80
+    volumes:
+      - ./config/nginx/conf.d:/etc/nginx/conf.d
+      - static:/opt/services/djangoapp/static
+      - media:/opt/services/djangoapp/media
+    networks:
+      - nginx_network
+    depends_on:
+      - djangoapp
+
+  nginx_frontend:
+    build: ./frontend
+    ports: 
+      - 8106:80
+    networks:
+      - nginx_network
+    
+
+networks:
+  database1_network:
+    driver: bridge
+  nginx_network:
+    driver: bridge
+
+volumes:
+  postgres-data:
+  static:
+  media:

@@ -1,0 +1,26 @@
+<div class="jumbotron-fluid pt-5 pb-5">
+    <h3 class="d-flex justify-content-center">Famous Bankrupt Companies</h3>
+</div>
+
+<div class="container shadow p-5">
+    <table class="table table-stripped">
+        <thead>
+            <tr>
+                <th>Company Name</th>
+                <th>End Date</th>
+                <th>Employees</th>
+                <th>Assets (billions)</th>
+                <th>Link</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let company of companies">
+                <td>{{company.Name}}</td>
+                <td>{{company.DateTime}}</td>
+                <td>{{company.Employees}}</td>
+                <td>{{company.Assets}}</td>
+                <td><a href={{company.Link}}>{{company.Link}}</a></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
