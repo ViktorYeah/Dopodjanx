@@ -12,6 +12,8 @@ But the purpouse of this app is actually to show how the forementioned stack of 
 
 I also plan to make a video tutorial for this app.
 
+![N|Solid](https://github.com/ViktorYeah/Dopodjanx/blob/master/screenshot.png)
+
 ### Installation
 The following command should install and run all the services 
 ```sh
